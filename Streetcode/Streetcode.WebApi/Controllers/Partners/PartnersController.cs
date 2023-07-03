@@ -1,3 +1,4 @@
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Streetcode.BLL.DTO.Partners;
 using Streetcode.BLL.DTO.Partners.Create;
@@ -8,6 +9,7 @@ using Streetcode.BLL.MediatR.Partners.GetById;
 using Streetcode.BLL.MediatR.Partners.GetByStreetcodeId;
 using Streetcode.BLL.MediatR.Partners.GetByStreetcodeIdToUpdate;
 using Streetcode.DAL.Entities.Partners;
+using Streetcode.DAL.Entities.Streetcode.TextContent;
 using Streetcode.DAL.Enums;
 using Streetcode.WebApi.Attributes;
 
@@ -48,12 +50,26 @@ public class PartnersController : BaseApiController
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreatePartnerDTO partner)
     {
+        var validator = new PartnerDTOValidator();
+        var validationResult = await validator.ValidateAsync(partner);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+
         return HandleResult(await Mediator.Send(new CreatePartnerQuery(partner)));
     }
 
     [HttpPut]
     public async Task<IActionResult> Update([FromBody] CreatePartnerDTO partner)
     {
+        var validator = new PartnerDTOValidator();
+        var validationResult = await validator.ValidateAsync(partner);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+
         return HandleResult(await Mediator.Send(new BLL.MediatR.Partners.Update.UpdatePartnerQuery(partner)));
     }
 
