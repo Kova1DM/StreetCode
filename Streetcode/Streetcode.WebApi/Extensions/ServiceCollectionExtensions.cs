@@ -24,6 +24,7 @@ using Streetcode.BLL.Interfaces.Instagram;
 using Streetcode.BLL.Services.Instagram;
 using Streetcode.BLL.Interfaces.Text;
 using Streetcode.BLL.Services.Text;
+using FluentValidation.AspNetCore;
 
 namespace Streetcode.WebApi.Extensions;
 
@@ -113,7 +114,7 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddLogging();
-        services.AddControllers();
+        services.AddControllers().AddFluentValidation();
     }
 
     public static void AddSwaggerServices(this IServiceCollection services)

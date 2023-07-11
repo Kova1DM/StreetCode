@@ -23,6 +23,7 @@ using Streetcode.BLL.MediatR.Streetcode.Streetcode.WithUrlExist;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.GetAllStreetcodesMainPage;
 using Streetcode.BLL.MediatR.Streetcode.Streetcode.Update;
 using Streetcode.BLL.DTO.Streetcode.Update;
+using Streetcode.BLL.Validation;
 
 namespace Streetcode.WebApi.Controllers.Streetcode;
 
@@ -135,6 +136,14 @@ public class StreetcodeController : BaseApiController
     [HttpPut]
     public async Task<IActionResult> Update([FromBody]StreetcodeUpdateDTO streetcode)
     {
+        var validator = new StreetcodeUpdateDTOValidator();
+        var validationResult = await validator.ValidateAsync(streetcode);
+
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+
         return HandleResult(await Mediator.Send(new UpdateStreetcodeCommand(streetcode)));
 	}
 }
