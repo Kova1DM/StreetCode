@@ -69,6 +69,7 @@ public class StreetcodeDbContext : DbContext
     public DbSet<HistoricalContextTimeline> HistoricalContextsTimelines { get; set; }
     public DbSet<StreetcodePartner> StreetcodePartners { get; set; }
     public DbSet<TeamMemberPositions> TeamMemberPosition { get; set; }
+    public DbSet<Role> Roles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -80,6 +81,12 @@ public class StreetcodeDbContext : DbContext
               .HasOne(x => x.StreetcodeCoordinate)
               .WithOne(x => x.StatisticRecord)
               .HasForeignKey<StatisticRecord>(x => x.StreetcodeCoordinateId);
+
+        modelBuilder.Entity<Role>()
+            .HasMany(x => x.TeamMember)
+            .WithOne(x => x.Role)
+            .HasForeignKey(x => x.RoleId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<News>()
             .HasOne(x => x.Image)

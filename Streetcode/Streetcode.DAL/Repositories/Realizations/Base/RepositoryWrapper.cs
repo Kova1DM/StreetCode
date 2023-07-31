@@ -106,6 +106,8 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     private IStreetcodeImageRepository _streetcodeImageRepository;
 
+    private IRoleRepository _roleRepository;
+
     public RepositoryWrapper(StreetcodeDbContext streetcodeDbContext)
     {
         _streetcodeDbContext = streetcodeDbContext;
@@ -134,6 +136,19 @@ public class RepositoryWrapper : IRepositoryWrapper
             }
 
             return _factRepository;
+        }
+    }
+
+    public IRoleRepository RoleRepository
+    {
+        get
+        {
+            if (_roleRepository is null)
+            {
+                _roleRepository = new RoleRepository(_streetcodeDbContext);
+            }
+
+            return _roleRepository;
         }
     }
 
