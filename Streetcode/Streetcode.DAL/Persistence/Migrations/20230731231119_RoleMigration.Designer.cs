@@ -12,7 +12,7 @@ using Streetcode.DAL.Persistence;
 namespace Streetcode.DAL.Persistence.Migrations
 {
     [DbContext(typeof(StreetcodeDbContext))]
-    [Migration("20230731205645_RoleMigration")]
+    [Migration("20230731231119_RoleMigration")]
     partial class RoleMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -751,6 +751,9 @@ namespace Streetcode.DAL.Persistence.Migrations
                         .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleName")
+                        .IsUnique();
 
                     b.ToTable("role", "team");
                 });

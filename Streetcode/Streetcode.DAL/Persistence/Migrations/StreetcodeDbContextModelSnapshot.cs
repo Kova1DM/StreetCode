@@ -750,6 +750,9 @@ namespace Streetcode.DAL.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RoleName")
+                        .IsUnique();
+
                     b.ToTable("role", "team");
                 });
 

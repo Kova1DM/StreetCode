@@ -9,6 +9,6 @@ namespace Streetcode.BLL.DTO.Team
 
         public string RoleName { get; set; }
 
-        public List<TeamMemberDTO> TeamMember { get; set; } = new List<TeamMemberDTO>();
+        public List<TeamMemberDTO>? TeamMember { get; set; }
     }
 }

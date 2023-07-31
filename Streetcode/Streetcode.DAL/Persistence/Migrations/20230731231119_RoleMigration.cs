@@ -8,6 +8,11 @@ namespace Streetcode.DAL.Persistence.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropColumn(
+                name: "Title",
+                schema: "partners",
+                table: "partner_source_links");
+
             migrationBuilder.AddColumn<int>(
                 name: "RoleId",
                 schema: "team",
@@ -15,6 +20,17 @@ namespace Streetcode.DAL.Persistence.Migrations
                 type: "int",
                 nullable: false,
                 defaultValue: 0);
+
+            migrationBuilder.AlterColumn<string>(
+                name: "TargetUrl",
+                schema: "partners",
+                table: "partners",
+                type: "nvarchar(255)",
+                maxLength: 255,
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(255)",
+                oldMaxLength: 255);
 
             migrationBuilder.CreateTable(
                 name: "role",
@@ -35,6 +51,13 @@ namespace Streetcode.DAL.Persistence.Migrations
                 schema: "team",
                 table: "team_members",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_role_RoleName",
+                schema: "team",
+                table: "role",
+                column: "RoleName",
+                unique: true);
 
             migrationBuilder.AddForeignKey(
                 name: "FK_team_members_role_RoleId",
@@ -67,6 +90,28 @@ namespace Streetcode.DAL.Persistence.Migrations
                 name: "RoleId",
                 schema: "team",
                 table: "team_members");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "TargetUrl",
+                schema: "partners",
+                table: "partners",
+                type: "nvarchar(255)",
+                maxLength: 255,
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "nvarchar(255)",
+                oldMaxLength: 255,
+                oldNullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "Title",
+                schema: "partners",
+                table: "partner_source_links",
+                type: "nvarchar(50)",
+                maxLength: 50,
+                nullable: false,
+                defaultValue: "");
         }
     }
 }

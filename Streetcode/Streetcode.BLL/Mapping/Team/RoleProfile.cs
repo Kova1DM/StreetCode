@@ -8,7 +8,8 @@ namespace Streetcode.BLL.Mapping.Team
     {
         public RoleProfile()
         {
-            CreateMap<Role, RoleDTO>().ReverseMap();
+            CreateMap<RoleDTO, Role>().ReverseMap();
+            CreateMap<RoleCreateDTO, Role>().ReverseMap();
         }
     }
 }

@@ -5,11 +5,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Streetcode.DAL.Entities.Team
 {
     [Table("role", Schema = "team")]
-
+    [Index(nameof(RoleName), IsUnique = true)]
     public class Role
     {
         [Key]
@@ -17,7 +18,7 @@ namespace Streetcode.DAL.Entities.Team
         public int Id { get; set; }
         [Required]
         [MaxLength(150)]
-        public string? RoleName { get; set; }
+        public string RoleName { get; set; }
         public List<TeamMember>? TeamMember { get; set; }
     }
 }
