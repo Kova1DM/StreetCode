@@ -59,20 +59,8 @@ pipeline {
                 }
             }
         }
-         stage('GitVersion') {
-            steps {
-                script {
-                    // Date date = new Date()
-                    // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
-                // string imageTag = sh(script: 'dotnet-gitversion', returnStdout: true)
-                // def gitVersionJson = readJson(text: gitVersion)
-                // String imageTag = gitVersionJson['MajorMinorPatch']
-                // println(imageTag)
-                 }
-                }
-            }
         }
-    }
+  //  }
         // stage('Build') {
         //     steps {
         //         sh 'nuke CompileAPI --configuration Release --no-restore'
@@ -123,4 +111,4 @@ pipeline {
 //         }
 //     }
 // }
-//}
+}
