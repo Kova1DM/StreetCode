@@ -3,64 +3,23 @@ pipeline {
         label 'stage'
     }
     stages {
-        stage('Branch name'){
+        // stage('Branch name'){
 
-            steps{
-                echo "${env.BRANCH_NAME}"
+        //     steps{
+        //         echo "${env.BRANCH_NAME}"
 
-                sh '''
-                    printenv
-                    '''
-             }
-         }
+        //         sh '''
+        //             printenv
 
-        stage('Restore Dependencies') {
-            steps {
-                 sh 'dotnet restore ./Streetcode/Streetcode.sln'
-             }
-         }
-        stage('GitVersion') {
-            steps {
-                script {
-                    // Date date = new Date()
-                    // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
-                    sh 'dotnet-gitversion /output buildserver'
-                    withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
-                    sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
-                    sh "docker push ${username}/streetcode:latest"
-                    sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.GitVersion_MajorMinorPatch}"
-                    sh "docker push ${username}/streetcode:${ env.GitVersion_MajorMinorPatch}"
-                // string imageTag = sh(script: 'dotnet-gitversion', returnStdout: true)
-                // def gitVersionJson = readJson(text: gitVersion)
-                // String imageTag = gitVersionJson['MajorMinorPatch']
-                // println(imageTag)
-                // withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
-                // sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
-                // sh "docker push ${username}/streetcode:latest"
-                // sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.DATETAG}"
-                // sh "docker push ${username}/streetcode:${env.DATETAG}"
-                // }
-                }
-            }
-        }
-        }
-        stage('Inject environment variables step') {
-            steps {
-                script {
-                    def props = readProperties file: 'gitversion.properties'
+        //         '''
+        //     }
+        // }
 
-                    env.GitVersion_SemVer = props.GitVersion_SemVer
-                    env.GitVersion_BranchName = props.GitVersion_BranchName
-                    env.GitVersion_AssemblySemVer = props.GitVersion_AssemblySemVer
-                    env.GitVersion_MajorMinorPatch = props.GitVersion_MajorMinorPatch
-                    env.GitVersion_Sha = props.GitVersion_Sha
-
-                    echo "SemVer: ${GitVersion_SemVer}"
-                }
-            }
-        }
-        }
-  //  }
+        // stage('Restore Dependencies') {
+        //     steps {
+        //         sh 'dotnet restore ./Streetcode/Streetcode.sln'
+        //     }
+        // }
         // stage('Build') {
         //     steps {
         //         sh 'nuke CompileAPI --configuration Release --no-restore'
@@ -88,6 +47,32 @@ pipeline {
         //         }
         //     }
         // }
+        stage('GitVersion') {
+            steps {
+                script {
+                    // Date date = new Date()
+                    // env.DATETAG = date.format("HH-dd-MM-yy", TimeZone.getTimeZone('GMT+3'))
+                    sh 'dotnet-gitversion /output buildserver'
+                    def props = readProperties file: 'gitversion.properties'
+                    env.GitVersion_SemVer = props.GitVersion_SemVer
+                    env.GitVersion_BranchName = props.GitVersion_BranchName
+                    env.GitVersion_AssemblySemVer = props.GitVersion_AssemblySemVer
+                    env.GitVersion_MajorMinorPatch = props.GitVersion_MajorMinorPatch
+                    env.GitVersion_Sha = props.GitVersion_Sha
+                // string imageTag = sh(script: 'dotnet-gitversion', returnStdout: true)
+                // def gitVersionJson = readJson(text: gitVersion)
+                // String imageTag = gitVersionJson['MajorMinorPatch']
+                // println(imageTag)
+                 withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
+                 sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
+                 sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.GitVersion_MajorMinorPatch}"
+                 sh "docker push ${username}/streetcode:${env.GitVersion_MajorMinorPatch}"
+                // }
+                }
+            }
+        }
+
+    }
     // post {
     //     failure {
     //         script {
