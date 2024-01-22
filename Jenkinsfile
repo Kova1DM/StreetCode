@@ -3,6 +3,22 @@ pipeline {
         label 'stage'
     }
     stages {
+        stage('Branch name'){
+
+            steps{
+                echo "${env.BRANCH_NAME}"
+
+                sh '''
+                    printenv
+                    '''
+             }
+         }
+
+        stage('Restore Dependencies') {
+            steps {
+                 sh 'dotnet restore ./Streetcode/Streetcode.sln'
+             }
+         }
         stage('GitVersion') {
             steps {
                 script {
@@ -28,22 +44,6 @@ pipeline {
             }
         }
         }
-        stage('Branch name'){
-
-            steps{
-                echo "${env.BRANCH_NAME}"
-
-                sh '''
-                    printenv
-                    '''
-             }
-         }
-
-        stage('Restore Dependencies') {
-            steps {
-                 sh 'dotnet restore ./Streetcode/Streetcode.sln'
-             }
-         }
         stage('Inject environment variables step') {
             steps {
                 script {
@@ -72,7 +72,7 @@ pipeline {
                 }
             }
         }
- //   }
+    }
         // stage('Build') {
         //     steps {
         //         sh 'nuke CompileAPI --configuration Release --no-restore'
