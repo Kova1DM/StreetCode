@@ -66,7 +66,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
-                        sh "docker build -t ${username}/streetcode:${env.GitVersion_MajorMinorPatch}."
+                        sh "docker build -t ${username}/streetcode:${env.GitVersion_MajorMinorPatch}"
                      }
                 }
              }
