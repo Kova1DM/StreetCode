@@ -15,38 +15,11 @@ pipeline {
         //     }
         // }
 
-        // stage('Restore Dependencies') {
-        //     steps {
-        //         sh 'dotnet restore ./Streetcode/Streetcode.sln'
-        //     }
-        // }
-        // stage('Build') {
-        //     steps {
-        //         sh 'nuke CompileAPI --configuration Release --no-restore'
-        //     }
-        // }
-        // stage('Test') {
-        //     steps {
-        //         sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./coverage/coverage.xml'
-        //     }
-        // }
-        // stage('Docker prune') {
-        //     steps {
-        //         script {
-        //             sh 'docker image prune --force --all --filter "until=72h"'
-        //             sh 'docker system prune --force --all --filter "until=72h"'
-        //         }
-        //     }
-        // }
-        // stage('Docker build') {
-        //     steps {
-        //         script {
-        //             withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
-        //                 sh "docker build -t ${username}/streetcode:latest ."
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Restore Dependencies') {
+            steps {
+                sh 'dotnet restore ./Streetcode/Streetcode.sln'
+             }
+         }
         stage('GitVersion') {
             steps {
                 script {
@@ -63,15 +36,41 @@ pipeline {
                 // def gitVersionJson = readJson(text: gitVersion)
                 // String imageTag = gitVersionJson['MajorMinorPatch']
                 // println(imageTag)
-                 withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
-                 sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
-                 sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.GitVersion_MajorMinorPatch}"
-                 sh "docker push ${username}/streetcode:${env.GitVersion_MajorMinorPatch}"
+                // withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
+                // sh 'echo "${password}" | docker login -u "${username}" --password-stdin'
+                // sh "docker tag ${username}/streetcode:latest ${username}/streetcode:${env.GitVersion_MajorMinorPatch}"
+                // sh "docker push ${username}/streetcode:${env.GitVersion_MajorMinorPatch}"
                 // }
                 }
             }
         }
-      }
+        stage('Build') {
+            steps {
+                sh 'nuke CompileAPI --configuration Release --no-restore'
+             }
+         }
+        stage('Test') {
+            steps {
+                sh 'dotnet test ./Streetcode/Streetcode.XUnitTest/Streetcode.XUnitTest.csproj --configuration Release --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./coverage/coverage.xml'
+             }
+         }
+        stage('Docker prune') {
+            steps {
+                script {
+                    sh 'docker image prune --force --all --filter "until=72h"'
+                    sh 'docker system prune --force --all --filter "until=72h"'
+                 }
+             }
+        } 
+        stage('Docker build') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker-login-streetcode', passwordVariable: 'password', usernameVariable: 'username')]){
+                        sh "docker build -t ${username}/streetcode:${env.GitVersion_MajorMinorPatch}."
+                     }
+                }
+             }
+         }
     }
     // post {
     //     failure {
