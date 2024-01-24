@@ -6,7 +6,7 @@ pipeline {
         // stage('Branch name'){
         //     steps{
         //         echo "${env.BRANCH_NAME}"
-
+//
         //         sh '''
         //             printenv
 
