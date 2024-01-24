@@ -4,7 +4,6 @@ pipeline {
     }
     stages {
         // stage('Branch name'){
-        //
         //     steps{
         //         echo "${env.BRANCH_NAME}"
 
